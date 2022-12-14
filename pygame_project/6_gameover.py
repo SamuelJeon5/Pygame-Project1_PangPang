@@ -52,7 +52,7 @@ weapon_width = weapon_size[0]
 weapons = []
 
 # 무기 이동 속도
-weapon_speed = 10
+weapon_speed = 8
 
 # 공 만들기 (4개 크기에 대해 따로 처리)
 ball_images = [
@@ -62,7 +62,7 @@ ball_images = [
     pygame.image.load(os.path.join(image_path, "balloon4.png"))]
 
 # 공 크기에 따른 최초 스피드
-ball_speed_y = [-15, -12, -9, -6]  # index 0, 1, 2, 3 에 해당하는 값
+ball_speed_y = [-18, -15, -12, -9]  # index 0, 1, 2, 3 에 해당하는 값
 
 # 공들
 balls = []
@@ -80,9 +80,18 @@ balls.append({
 weapon_to_remove = -1
 ball_to_remove = -1
 
+# 폰트 정의
+game_font = pygame.font.Font(None, 40)
+total_time = 100
+start_ticks = pygame.time.get_ticks()  # 시작 tick 을 받아옴
+
+# 게임 종료 메시지 / TimeOut, Mission Complete, Game Over
+
+game_result = "Game Over"
+
 running = True  # The game is running?
 while running:
-    dt = clock.tick(60)  # 게임화면의 초당 프레임 수를 설정
+    dt = clock.tick(50)  # 게임화면의 초당 프레임 수를 설정
 
     # 2.이벤트 처리(키보드, 마우스 등)
     for event in pygame.event.get():
@@ -136,7 +145,7 @@ while running:
         if ball_pos_y >= screen_height - ball_height:  # 바닥에 닿았을 때
             ball_val["to_y"] = ball_val["init_spd_y"]
         else:  # 그 외의 모든 경우에는 속도를 증가
-            ball_val["to_y"] += 0.2
+            ball_val["to_y"] += 0.3
 
         ball_val["pos_x"] += ball_val["to_x"]
         ball_val["pos_y"] += ball_val["to_y"]
@@ -218,6 +227,11 @@ while running:
         del weapons[weapon_to_remove]
         weapon_to_remove = -1
 
+    # 모든 공을 없앤 경우 게임 종료
+    if len(balls) == 0:
+        game_result = "Mission Complete"
+        running = False
+
     # 5. 화면에 그리기
     screen.blit(background, (0, 0))
     for weapon_x_pos, weapon_y_pos in weapons:
@@ -231,7 +245,25 @@ while running:
     screen.blit(stage, (0, screen_height - stage_height))
     screen.blit(character, (character_x_pos, character_y_pos))
 
+    # 경과 시간 계산
+    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
+    timer = game_font.render("Time : {}".format(int(total_time - elapsed_time)), True, (255,255,255))
+    screen.blit(timer, (10,10))
+
+    # 시간 초과했다면
+    if total_time - elapsed_time <= 0:
+        game_result = "Time Over"
+        running = False
+
     pygame.display.update()  # Game display re-paint!
+# Game Over Message
+msg = game_font.render(game_result, True, (255,255,0))
+msg_rect = msg.get_rect(center=(int(screen_width / 2), int(screen_height / 2)))
+screen.blit(msg, msg_rect)
+pygame.display.update()
+
+pygame.time.delay(2000)
+
 
 # pygame quit
 pygame.quit()
