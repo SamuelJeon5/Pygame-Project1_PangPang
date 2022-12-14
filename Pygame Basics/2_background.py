@@ -11,7 +11,7 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Samuel Game")  # Game Title
 
 # Load background image
-background = pygame.image.load("C:\\Users\\souls\\PycharmProjects\\pythonProject\\background.png")
+background = pygame.image.load("/Pygame Basics/background.png")
 
 # Event Loop
 running = True  # The game is running?

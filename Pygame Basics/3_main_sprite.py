@@ -11,10 +11,10 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption("Samuel Game")  # Game Title
 
 # Load background image
-background = pygame.image.load("C:\\Users\\souls\\PycharmProjects\\pythonProject\\background.png")
+background = pygame.image.load("/Pygame Basics/background.png")
 
 # Load sprite(character)
-character = pygame.image.load("C:\\Users\\souls\\PycharmProjects\\pythonProject\\character.png")
+character = pygame.image.load("/Pygame Basics/character.png")
 character_size = character.get_rect().size # Get Image size
 character_width = character_size[0]
 character_height = character_size[1]
